@@ -1,34 +1,43 @@
-// Vänta tills allt på sidan är laddat
 $(document).ready(function () {
+  function getWeather(city) {
+    const apiKey = API_KEY;
 
-  // TODO: Skapa funktionen för att hämta väderdata
-  // Tips: Funktionen ska ta emot en parameter
-  
-  // TODO: Hämta API-nyckeln från config.js
-  // Tips: Använd API_KEY variabeln som är definierad i config.js
-  const apiKey = API_KEY;
-  
-  // TODO: Kontrollera om fältet är tomt
-  // Om det är tomt, visa ett felmeddelande i #error och avsluta funktionen
+    // API-URL
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
-  // TODO: Skapa API-URL (använd backticks och infoga city och din API-nyckel)
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city_input}&appid=${apiKey}&units=metric`;
+    // Get data
+    $.get(url)
+      .done(function (data) {
+        const cityName = data.name;
+        const weather = data.weather[0].main;
+        const icon = data.weather[0].icon;
+        const description = data.weather[0].description;
+        const temperature = data.main.temp;
+        const feelsLike = data.main.feels_like;
+        const iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+        console.log("data: ", data);
 
-  // TODO: Gör ett anrop till OpenWeatherMap med $.get()
-  // Tips: Använd url som du byggde ovan och logga svaret i konsolen
-  // Om det lyckas:
-  // - Läs ut: stadsnamn, väderbeskrivning, temperatur, landkod, ikon-id
-  // Om anropet misslyckas:
-  // Visa ett felmeddelande i #error
+        const information = `
+          <h2>${cityName}</h2>
+          <p>Weather: ${weather} <img src="${iconUrl}"></p>
+          <p>Description: ${description}</p>
+          <p>Temperature: ${temperature}°C</p>
+          <p>Feels like: ${feelsLike}°C</p>
+        `;
+        $("#result").html(information);
 
+        $("#error").text("");
+      })
 
-  // TODO: Bygg HTML och visa i #result
-  // Tips: Använd mallsträngar (backticks) för att bygga HTML
+      .fail(function () {
+        $("#error").text("Please insert a location");
+      });
+  }
 
-  
+  //Get function for button
+  $("#getWeather").on("click", function () {
+    const city = $("#city").val().trim();
 
-  // TODO: Välj knappen och lyssna på klick
-  // Tips: Använd .on("click", ...) på rätt element
-  
-
+    getWeather(city);
+  });
 });
