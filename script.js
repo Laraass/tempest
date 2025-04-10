@@ -15,7 +15,6 @@ $(document).ready(function () {
         const temperature = data.main.temp;
         const feelsLike = data.main.feels_like;
         const iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-        console.log("data: ", data);
 
         const information = `
           <h2>${cityName}</h2>
@@ -34,10 +33,18 @@ $(document).ready(function () {
       });
   }
 
-  //Get function for button
+  // Get function for button
   $("#getWeather").on("click", function () {
     const city = $("#city").val().trim();
 
     getWeather(city);
   });
+
+  // Support for enter-key on keyboard
+  $('#city').keypress(function (e) {
+    if (e.which === 13) {
+      $('#getWeather').click();
+    }
+  })
+
 });
